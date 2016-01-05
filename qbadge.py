@@ -90,5 +90,7 @@ def status_badge(project, status):
 
 
 if __name__ == '__main__':
-    app.debug = True
-    app.run()
+    app.config.from_object('local_settings')
+    app.run(host=app.config.get("HOST", "localhost"),
+            port=app.config.get("PORT", "9000")
+            )

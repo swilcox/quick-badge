@@ -36,11 +36,15 @@ def _decode_percentage(input_string):
     return status_text, c
 
 
-def _decode_passfail(input_string):
+def _decode_passfail(input_string, show_amount=False):
     if input_string.strip() in ["0", ""]:
         return "passing", 'brightgreen'
     else:
-        return "failed", 'red'
+        return "failing [{0}]".format(input_string.strip()) if show_amount else "failing", 'red'
+
+
+def _decode_annotated_passfail(input_string):
+    return _decode_passfail(input_string, True)
 
 
 def _decode_info(input_string):
@@ -49,13 +53,14 @@ def _decode_info(input_string):
 
 METRIC_TYPES = {
     'percentage': _decode_percentage,
-    'pass-fail': _decode_passfail,
+    'passfail': _decode_passfail,
+    'annotated-passfail': _decode_annotated_passfail,
     'info': _decode_info,
 }
 
 
 CONFIGURED_TYPES = {'coverage': 'percentage',
-                    'flake8': 'pass-fail',
+                    'flake8': 'annotated-passfail',
                     'version': 'info'}
 
 

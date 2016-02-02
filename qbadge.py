@@ -10,6 +10,8 @@ BADGE_URL = 'https://img.shields.io/badge/{0}-{1}-{2}.svg?style=flat'
 STATUS_HOME = '../stati/'
 PERCENT_RE = re.compile(r"(\d+)\.?(\d+)?%")
 
+def _badge_escape(input_string):
+    return input_string.replace('-', '--')
 
 def _decode_percentage(input_string):
     v = -1
@@ -24,7 +26,7 @@ def _decode_percentage(input_string):
     elif 41 <= v <= 60:
         c = 'yellow'
     elif 61 <= v <= 80:
-        c = 'yellogreen'
+        c = 'yellowgreen'
     elif 81 <= v <= 90:
         c = 'green'
     elif 91 <= v:
@@ -79,7 +81,7 @@ def _compute_badge(project_name, status_name):
                     status_text, status_color = METRIC_TYPES[CONFIGURED_TYPES[status_name]](lines[-1])
                 else:
                     status_text = lines[-1].strip()
-    return BADGE_URL.format(status_name, status_text, status_color)
+    return BADGE_URL.format(_badge_escape(status_name), _badge_escape(status_text), status_color)
 
 
 @app.route('/')

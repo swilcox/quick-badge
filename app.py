@@ -1,7 +1,8 @@
 from flask import Flask
 from flask import send_file
 import requests
-from StringIO import StringIO
+from requests.utils import quote
+from io import BytesIO
 import os
 import re
 
@@ -10,8 +11,10 @@ BADGE_URL = 'https://img.shields.io/badge/{0}-{1}-{2}.svg?style=flat'
 STATUS_HOME = '../stati/'
 PERCENT_RE = re.compile(r"(\d+)\.?(\d+)?%")
 
+
 def _badge_escape(input_string):
-    return input_string.replace('-', '--')
+    return quote(input_string.replace('-', '--'))
+
 
 def _decode_percentage(input_string):
     v = -1
@@ -74,7 +77,7 @@ def _compute_badge(project_name, status_name):
     status_text = 'unknown'
     status_color = 'lightgray'
     if os.path.exists(fname):
-        with file(fname, 'rt') as f:
+        with open(fname, 'rt') as f:
             lines = f.readlines()
             if len(lines):
                 if status_name in CONFIGURED_TYPES.keys():
@@ -92,12 +95,6 @@ def home_page():
 @app.route('/status/<project>/<status>')
 def status_badge(project, status):
     r = requests.get(_compute_badge(project, status))
-    image = StringIO(r.content)
+    image = BytesIO(r.content)
     return send_file(image, mimetype=r.headers['Content-Type'])
 
-
-if __name__ == '__main__':
-    app.config.from_object('local_settings')
-    app.run(host=app.config.get("HOST", "localhost"),
-            port=app.config.get("PORT", "9000")
-            )

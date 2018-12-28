@@ -7,7 +7,11 @@ This was mainly an excuse for me to play with a simple flask app, but serves a p
 tests and metrics on a Jenkins server. The internal enterprise github `README.md` file needs badges that not only display
  the build status from Jenkins (which can be accomplished via a Jenkins plugin), but also test coverage percentage and flake8 (pep8)
  compliance which in our case is not part of the regular test.
- 
+
+## notes
+
+Python 3 only now!
+
 ## usage
 
 The project is designed to run on a Jenkins or other test server.
